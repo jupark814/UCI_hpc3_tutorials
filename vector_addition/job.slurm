@@ -24,3 +24,7 @@ nvcc -Xcompiler -std=c99 sumArraysOnHost.c -o sumC
 
 echo -e "=== sumArraysOnHost ==="
 ./sumC
+
+
+echo -e "=== VectorAddition ==="
+
