@@ -22,7 +22,7 @@ float *readCMD(const char *fileName, int *length) {
         fclose(file);
         exit(EXIT_FAILURE);
     }
-    printf("Reading file: %s, Length: %d\n", fileName, *length); // Debug print
+    // printf("Reading file: %s, Length: %d\n", fileName, *length); // Debug print
 
     // Allocate memory for the array
     float *data = (float *)malloc(*length * sizeof(float));
@@ -42,12 +42,13 @@ float *readCMD(const char *fileName, int *length) {
         }
     }
     fclose(file);
-
+    '''
     // Print the first few elements for debugging
     printf("Data from %s:\n", fileName);
     for (int i = 0; i < (*length < 5 ? *length : 5); i++) { // Print up to 5 elements
         printf("Element %d: %f\n", i, data[i]);
     }
+    '''
     return data;
 }
 
@@ -156,7 +157,7 @@ int main(int argc, char **argv) {
   cudaFree(deviceInput2);
   cudaFree(deviceOutput);
 
-  printf("It is successful until here\n");
+  // printf("It is successful until here\n");
   saveOutput("/tmp/myoutput.raw", hostOutput, inputLength);
 
   //@@ Save the output to the output file
@@ -187,7 +188,6 @@ int main(int argc, char **argv) {
   }
 
   fclose(output);
-
 
   free(hostInput1);
   free(hostInput2);
