@@ -42,13 +42,13 @@ float *readCMD(const char *fileName, int *length) {
         }
     }
     fclose(file);
-    '''
+    /*
     // Print the first few elements for debugging
     printf("Data from %s:\n", fileName);
     for (int i = 0; i < (*length < 5 ? *length : 5); i++) { // Print up to 5 elements
         printf("Element %d: %f\n", i, data[i]);
     }
-    '''
+    */
     return data;
 }
 
