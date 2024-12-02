@@ -51,6 +51,25 @@ float *readCMD(const char *fileName, int *length) {
     return data;
 }
 
+
+void saveOutput(const char *fileName, float *data, int length) {
+    FILE *file = fopen(fileName, "w");
+    if (!file) {
+        fprintf(stderr, "Error: Could not open file %s for writing\n", fileName);
+        exit(EXIT_FAILURE);
+    }
+
+    // Write the length of the array (optional, for debugging purposes)
+    fprintf(file, "%d\n", length);
+
+    // Write the data
+    for (int i = 0; i < length; i++) {
+        fprintf(file, "%f\n", data[i]);
+    }
+
+    fclose(file);
+}
+
 int main(int argc, char **argv) {
   if (argc < 4) {
       fprintf(stderr, "Usage: %s -i input0.raw,input1.raw -o output.raw -t vector\n", argv[0]);
@@ -138,6 +157,7 @@ int main(int argc, char **argv) {
   cudaFree(deviceOutput);
 
   printf("It is successful until here\n");
+  saveOutput("/tmp/myoutput.raw", hostOutput, inputLength);
 
   //@@ Save the output to the output file
   FILE *output = fopen(outputFile, "wb");
@@ -154,11 +174,6 @@ int main(int argc, char **argv) {
   fwrite(hostOutput, sizeof(float), inputLength, output);
   fclose(output);
 
-  // Print the first few elements for debugging
-  printf("Data from %s:\n", outputFile);
-  for (int i = 0; i < (*inputLength < 5 ? *inputLength : 5); i++) { // Print up to 5 elements
-      printf("Element %d: %f\n", i, data[i]);
-  }
 
   free(hostInput1);
   free(hostInput2);
