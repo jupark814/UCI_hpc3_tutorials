@@ -32,14 +32,15 @@ float *readCMD(const char *fileName, int *length) {
         exit(EXIT_FAILURE);
     }
 
-    // Read the length from the first line
-    if (fscanf(file, "%d", length) != 1) {
-        fprintf(stderr, "Error: Could not read length from file %s\n", fileName);
-        fclose(file);
-        exit(EXIT_FAILURE);
+    // Read the array data
+    for (int i = 0; i < *length; i++) {
+        if (fscanf(file, "%f", &data[i]) != 1) {
+            fprintf(stderr, "Error: Could not read data from file %s\n", fileName);
+            free(data);
+            fclose(file);
+            exit(EXIT_FAILURE);
+        }
     }
-    printf("Reading file: %s, Length: %d\n", fileName, *length); // Debug print
-
     fclose(file);
 
     // Print the first few elements for debugging
@@ -81,8 +82,8 @@ int main(int argc, char **argv) {
       return EXIT_FAILURE;
   }
 
-  printf("Input file 1: %s\n", file1); // Debug print
-  printf("Input file 2: %s\n", file2); // Debug print
+  // printf("Input file 1: %s\n", file1); // Debug print
+  // printf("Input file 2: %s\n", file2); // Debug print
 
   int inputLength;
   float *hostInput1 = readCMD(file1, &inputLength);
