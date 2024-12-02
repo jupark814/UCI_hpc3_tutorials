@@ -19,7 +19,7 @@ float *readCMD(const char *fileName, int *length) {
     // Read the length of the array from the file (assuming length is stored in the first 4 bytes)
     fread(length, sizeof(int), 1, file);
     printf("Reading file: %s, Length: %d\n", fileName, *length); // Debug print
-    
+
     // Allocate memory for the array
     float *data = (float *)malloc(*length * sizeof(float));
     if (!data) {
@@ -30,6 +30,11 @@ float *readCMD(const char *fileName, int *length) {
 
     // Read the array data
     fread(data, sizeof(float), *length, file);
+    // Print the first few elements of the array for debugging
+    printf("Data from %s:\n", fileName);
+    for (int i = 0; i < (*length < 5 ? *length : 5); i++) { // Print up to 5 elements
+        printf("Element %d: %f\n", i, data[i]);
+    }
     fclose(file);
     return data;
 }
