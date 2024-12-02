@@ -176,11 +176,15 @@ int main(int argc, char **argv) {
   for (int i = 0; i < inputLength; i++) {
     if (hostOutput[i] == (int)hostOutput[i]) {
         // Value is a whole number, print as integer
-        fprintf(output, "%d.\n", (int)hostOutput[i]);
+        fprintf(output, "%d.", (int)hostOutput[i]);
     } else {
         // Value is not a whole number, print as float with one decimal place
-        fprintf(output, "%.1f\n", hostOutput[i]);
-    }  }
+        fprintf(output, "%.1f", hostOutput[i]);
+    }
+    if (i+1 != inputLength) {
+      fprintf("\n");
+    }
+  }
 
   fclose(output);
 
