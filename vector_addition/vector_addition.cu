@@ -131,9 +131,6 @@ int main(int argc, char **argv) {
   fwrite(hostOutput, sizeof(float), inputLength, output);
   fclose(output);
 
-  for (int i = 0; i < inputLength; i++) {
-    printf(hostOutput[i]);
-  }
   free(hostInput1);
   free(hostInput2);
   free(hostOutput);
