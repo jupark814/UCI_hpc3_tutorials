@@ -43,7 +43,7 @@ for i in {0..9}; do
     # Compare the output (Exception for case 3: Manually checked Correctness)
     if i == 3; then
         echo "Case 3: No Difference. All Good."
-    if
+    fi
     if diff $EXPECTED $MYOUTPUT > /dev/null; then
         echo "Case $i: No Difference. All Good."
     else
