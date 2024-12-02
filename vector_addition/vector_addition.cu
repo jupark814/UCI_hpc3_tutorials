@@ -160,18 +160,23 @@ int main(int argc, char **argv) {
   saveOutput("/tmp/myoutput.raw", hostOutput, inputLength);
 
   //@@ Save the output to the output file
-  FILE *output = fopen(outputFile, "wb");
+  FILE *output = fopen(outputFile, "w");
   if (!output) {
-      fprintf(stderr, "Error: Could not open output file %s\n", outputFile);
+      fprintf(stderr, "Error: Could not open output file %s for writing\n", outputFile);
       free(hostInput1);
       free(hostInput2);
       free(hostOutput);
       return EXIT_FAILURE;
   }
 
-  // Write the array length and data
-  fwrite(&inputLength, sizeof(int), 1, output);
-  fwrite(hostOutput, sizeof(float), inputLength, output);
+  // Write the length as the first line
+  fprintf(output, "%d\n", inputLength);
+
+  // Write each element of the output array on a new line
+  for (int i = 0; i < inputLength; i++) {
+      fprintf(output, "%f\n", hostOutput[i]);
+  }
+
   fclose(output);
 
 
