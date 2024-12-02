@@ -1,14 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <cuda_runtime_api.h>
 
 // Vector Addition
 
+// Device Code
 __global__ void vecAdd(float *in1, float *in2, float *out, int len) {
-  //@@ Insert code to implement vector addition here
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   if(i<len) out[i] = in1[i] + in2[i];
 }
 
+
+// Host Code
 float *readCMD(const char *fileName, int *length) {
     FILE *file = fopen(fileName, "rb");
     if (!file) {
@@ -70,6 +74,7 @@ void saveOutput(const char *fileName, float *data, int length) {
 
     fclose(file);
 }
+
 
 int main(int argc, char **argv) {
   if (argc < 4) {
@@ -140,19 +145,19 @@ int main(int argc, char **argv) {
   cudaMemcpy(deviceInput1, hostInput1, size, cudaMemcpyHostToDevice);
   cudaMemcpy(deviceInput2, hostInput2, size, cudaMemcpyHostToDevice);
 
-  //@@ Initialize the grid and block dimensions here
+  // Initialize the grid and block dimensions here
   dim3 DimGrid(ceil(inputLength/256.0), 1, 1);
   dim3 DimBlock(256, 1, 1);
 
-  //@@ Launch the GPU Kernel here to perform CUDA computation
+  // Launch the GPU Kernel here to perform CUDA computation
   vecAdd<<<DimGrid,DimBlock>>>(deviceInput1, deviceInput2, deviceOutput, inputLength);
 
   cudaDeviceSynchronize();
 
-  //@@ Copy the GPU memory back to the CPU here
+  // Copy the GPU memory back to the CPU here
   cudaMemcpy(hostOutput, deviceOutput, size, cudaMemcpyDeviceToHost);
 
-  //@@ Free the GPU memory here
+  // Free the GPU memory here
   cudaFree(deviceInput1);
   cudaFree(deviceInput2);
   cudaFree(deviceOutput);
@@ -160,7 +165,7 @@ int main(int argc, char **argv) {
   // printf("It is successful until here\n");
   saveOutput("/tmp/myoutput.raw", hostOutput, inputLength);
 
-  //@@ Save the output to the output file
+  // Save the output to the output file
   FILE *output = fopen(outputFile, "w");
   if (!output) {
       fprintf(stderr, "Error: Could not open output file %s for writing\n", outputFile);

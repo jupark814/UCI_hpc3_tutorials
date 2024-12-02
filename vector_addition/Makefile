@@ -4,7 +4,7 @@ clean:
 	rm -f $(OBJ).o
 
 cleanall: clean
-	rm -f $(OBJ) *.out *.err myoutput.raw h_A_B_C.txt
+	rm -f $(OBJ) *.out *.err /myoutput/*.raw h_A_B_C.txt
 
 run: 
 	sbatch job.slurm

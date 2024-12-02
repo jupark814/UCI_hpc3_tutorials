@@ -20,10 +20,10 @@ nvidia-smi
 echo -e "\n"
 module load cudasdk/22.9
 
-# nvcc -Xcompiler -std=c99 sumArraysOnHost.c -o sumC
+nvcc -Xcompiler -std=c99 sumArraysOnHost.c -o sumC
 
-# echo -e "=== sumArraysOnHost ==="
-# ./sumC
+echo -e "=== sumArraysOnHost ==="
+./sumC
 
 nvcc -o vec_add vector_addition.cu
 echo -e "=== VectorAddition ==="
