@@ -18,25 +18,34 @@ echo "=== GPU Information ==="
 nvidia-smi
 
 echo -e "\n"
-#module load cudasdk/22.9
 
+# Environment Setup
+module load cudasdk/22.9
+module load gcc/8.4.0
+
+# Compile the Code
 gcc -std=c99 -o sumC sumArraysOnHost.c
+nvcc -o vec_add vector_addition.cu
 
 echo -e "=== sumArraysOnHost ==="
 ./sumC
 echo -e "sumArraysOnHost Completed\n"
 
-nvcc -o vec_add vector_addition.cu
 echo -e "=== VectorAddition ==="
-srun ./vec_add -e data/0/output.raw -i data/0/input0.raw,data/0/input1.raw -o myoutput/myoutput0.raw -t vector >> vec_add.out
-srun ./vec_add -e data/1/output.raw -i data/1/input0.raw,data/1/input1.raw -o myoutput/myoutput1.raw -t vector >> vec_add.out
-srun ./vec_add -e data/2/output.raw -i data/2/input0.raw,data/2/input1.raw -o myoutput/myoutput2.raw -t vector >> vec_add.out
-srun ./vec_add -e data/3/output.raw -i data/3/input0.raw,data/3/input1.raw -o myoutput/myoutput3.raw -t vector >> vec_add.out
-srun ./vec_add -e data/4/output.raw -i data/4/input0.raw,data/4/input1.raw -o myoutput/myoutput4.raw -t vector >> vec_add.out
-srun ./vec_add -e data/5/output.raw -i data/5/input0.raw,data/5/input1.raw -o myoutput/myoutput5.raw -t vector >> vec_add.out
-srun ./vec_add -e data/6/output.raw -i data/6/input0.raw,data/6/input1.raw -o myoutput/myoutput6.raw -t vector >> vec_add.out
-srun ./vec_add -e data/7/output.raw -i data/7/input0.raw,data/7/input1.raw -o myoutput/myoutput7.raw -t vector >> vec_add.out
-srun ./vec_add -e data/8/output.raw -i data/8/input0.raw,data/8/input1.raw -o myoutput/myoutput8.raw -t vector >> vec_add.out
-srun ./vec_add -e data/9/output.raw -i data/9/input0.raw,data/9/input1.raw -o myoutput/myoutput9.raw -t vector >> vec_add.out
+for i in {0..9}; do 
+    # Define file paths
+    EXPECTED="data/$i/output.raw"
+    MYOUTPUT="myoutput/myoutput$i.raw"
+
+    #Run the program
+    srun ./vec_add -e $EXPECTED -i data/$i/input0.raw,data/$i/input1.raw -o MYOUTPUT -t vector >> vec_add.out
+
+    # Compare the output
+    if diff $EXPECTED $MYOUTPUT > /dev/null; then
+        echo "Case $i: No Difference. All Good"
+    else
+        echo "Case $i: Different. Incorrect."
+    fi
+done
 echo -e "Vector Addition Completed\n"
 
