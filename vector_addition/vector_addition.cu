@@ -18,7 +18,8 @@ float *readCMD(const char *fileName, int *length) {
 
     // Read the length of the array from the file (assuming length is stored in the first 4 bytes)
     fread(length, sizeof(int), 1, file);
-
+    printf("Reading file: %s, Length: %d\n", fileName, *length); // Debug print
+    
     // Allocate memory for the array
     float *data = (float *)malloc(*length * sizeof(float));
     if (!data) {
@@ -116,7 +117,8 @@ int main(int argc, char **argv) {
   cudaFree(deviceInput2);
   cudaFree(deviceOutput);
 
-  printf("It is successful until here");
+  printf("It is successful until here\n");
+
   //@@ Save the output to the output file
   FILE *output = fopen(outputFile, "wb");
   if (!output) {
