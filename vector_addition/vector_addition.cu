@@ -69,7 +69,8 @@ int main(int argc, char **argv) {
       fprintf(stderr, "Error: Invalid input file format\n");
       return EXIT_FAILURE;
   }
-
+  printf("Input file 1: %s\n", file1); // Debug print
+  printf("Input file 2: %s\n", file2); // Debug print
   int inputLength;
   float *hostInput1 = readCMD(file1, &inputLength);
   float *hostInput2 = readCMD(file2, &inputLength);
