@@ -24,8 +24,7 @@ gcc -std=c99 -o sumC sumArraysOnHost.c
 
 echo -e "=== sumArraysOnHost ==="
 ./sumC
-echo -e "=== sumArraysOnHost Completed ==="
-echo -e "\n"
+echo -e "sumArraysOnHost Completed\n"
 
 nvcc -o vec_add vector_addition.cu
 echo -e "=== VectorAddition ==="
@@ -39,5 +38,5 @@ srun ./vec_add -e data/6/output.raw -i data/6/input0.raw,data/6/input1.raw -o my
 srun ./vec_add -e data/7/output.raw -i data/7/input0.raw,data/7/input1.raw -o myoutput/myoutput7.raw -t vector >> vec_add.out
 srun ./vec_add -e data/8/output.raw -i data/8/input0.raw,data/8/input1.raw -o myoutput/myoutput8.raw -t vector >> vec_add.out
 srun ./vec_add -e data/9/output.raw -i data/9/input0.raw,data/9/input1.raw -o myoutput/myoutput9.raw -t vector >> vec_add.out
-echo -e "Vector Addition Completed"
-echo -e "\n"
+echo -e "Vector Addition Completed\n"
+
