@@ -27,7 +27,7 @@ module load cudasdk/22.9
 
 nvcc -o vec_add vector_addition.cu
 echo -e "=== VectorAddition ==="
-srun ./vec_add -e data/0/output.raw -i data/0/input0.raw,data/0/input1.raw -o /tmp/myoutput.raw -t vector >> lab1.out
+srun ./vec_add -e data/0/output.raw -i data/0/input0.raw,data/0/input1.raw -o ./myoutput.raw -t vector >> lab1.out
 # srun ./vec_add -e data/1/output.raw -i data/1/input0.raw,data/1/input1.raw -o /tmp/myoutput.raw -t vector >> lab1.out
 # srun ./vec_add -e data/2/output.raw -i data/2/input0.raw,data/2/input1.raw -o /tmp/myoutput.raw -t vector >> lab1.out
 # srun ./vec_add -e data/3/output.raw -i data/3/input0.raw,data/3/input1.raw -o /tmp/myoutput.raw -t vector >> lab1.out
