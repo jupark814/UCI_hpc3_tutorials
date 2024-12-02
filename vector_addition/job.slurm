@@ -4,7 +4,6 @@
 #SBATCH --error=%x.err
 #SBATCH --out=%x.out
 #SBATCH --partition=gpu
-
 #SBATCH --gres=gpu:V100:1
 
 hn='hostname'
@@ -53,4 +52,3 @@ for i in {0..9}; do
 
 done
 echo -e "Vector Addition Completed\n"
-
