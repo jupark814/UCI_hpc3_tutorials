@@ -116,6 +116,7 @@ int main(int argc, char **argv) {
   cudaFree(deviceInput2);
   cudaFree(deviceOutput);
 
+  printf("It is successful until here");
   //@@ Save the output to the output file
   FILE *output = fopen(outputFile, "wb");
   if (!output) {

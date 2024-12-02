@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH  --job-name="vec_add"
 #SBATCH -A givargis_lab_gpu
-#SBATCH --error=%x.error
+#SBATCH --error=%x.err
 #SBATCH --out=%x.out
 #SBATCH --partition=gpu
 
