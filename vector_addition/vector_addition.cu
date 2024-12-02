@@ -174,8 +174,13 @@ int main(int argc, char **argv) {
 
   // Write each element of the output array on a new line
   for (int i = 0; i < inputLength; i++) {
-    fprintf(output, "%.1g\n", hostOutput[i]); // Adjust precision here
-  }
+    if (hostOutput[i] == (int)hostOutput[i]) {
+        // Value is a whole number, print as integer
+        fprintf(output, "%d.\n", (int)hostOutput[i]);
+    } else {
+        // Value is not a whole number, print as float with one decimal place
+        fprintf(output, "%.1f\n", hostOutput[i]);
+    }  }
 
   fclose(output);
 
