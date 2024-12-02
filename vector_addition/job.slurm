@@ -48,7 +48,7 @@ for i in {0..9}; do
             echo "Case $i: Different. Incorrect."
         fi
     else
-        echo "Case $3: No Difference. All Good."
+        echo "Case $i: No Difference. All Good."
     fi
 
 done
