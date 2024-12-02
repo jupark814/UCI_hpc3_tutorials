@@ -9,62 +9,84 @@ __global__ void vecAdd(float *in1, float *in2, float *out, int len) {
   if(i<len) out[i] = in1[i] + in2[i];
 }
 
-// Function to read data from binary file
-float* readBinaryFile(const char *filename, int *length) {
-    FILE *file = fopen(filename, "rb");
-    if (file == NULL) {
-        printf("Error: Unable to open file %s\n", filename);
-        exit(1);
+float *readCMD(const char *fileName, int *length) {
+    FILE *file = fopen(fileName, "rb");
+    if (!file) {
+        fprintf(stderr, "Error: Could not open file %s\n", fileName);
+        exit(EXIT_FAILURE);
     }
 
-    // Determine file size
-    fseek(file, 0, SEEK_END);
-    size_t fileSize = ftell(file);
-    rewind(file);
+    // Read the length of the array from the file (assuming length is stored in the first 4 bytes)
+    fread(length, sizeof(int), 1, file);
 
-    // Calculate the number of elements (assuming float data)
-    *length = fileSize / sizeof(float);
-
-    // Allocate memory and read data
-    float *data = (float *)malloc(fileSize);
-    if (data == NULL) {
-        printf("Error: Unable to allocate memory for file %s\n", filename);
+    // Allocate memory for the array
+    float *data = (float *)malloc(*length * sizeof(float));
+    if (!data) {
+        fprintf(stderr, "Error: Could not allocate memory for input data\n");
         fclose(file);
-        exit(1);
+        exit(EXIT_FAILURE);
     }
+
+    // Read the array data
     fread(data, sizeof(float), *length, file);
     fclose(file);
-
     return data;
 }
 
-void saveArrayToFile(const char *filename, float *array, int size) {
-	FILE *file = fopen(filename, "a");
-	if (file == NULL) {
-		printf("Error opening file %s for writing.\n", filename);
-		exit(1);
-	}
-	fprintf(file, "\n === ARRAY === \n");
-	for (int i = 0; i < size; i++) {
-		fprintf(file, "%f\n", array[i]); // Write each element to a new line
-	}
-	fprintf(file, "\n");
-	fclose(file);
-}
-
 int main(int argc, char **argv) {
+  if (argc < 4) {
+      fprintf(stderr, "Usage: %s -i input0.raw,input1.raw -o output.raw -t vector\n", argv[0]);
+      return EXIT_FAILURE;
+  }
+
+  char *inputFiles = NULL;
+  char *outputFile = NULL;
+
+  // Parse command-line arguments
+  for (int i = 1; i < argc; i++) {
+      if (strcmp(argv[i], "-i") == 0 && i + 1 < argc) {
+          inputFiles = argv[++i];
+      } else if (strcmp(argv[i], "-o") == 0 && i + 1 < argc) {
+          outputFile = argv[++i];
+      }
+  }
+
+  if (!inputFiles || !outputFile) {
+      fprintf(stderr, "Error: Missing required arguments\n");
+      return EXIT_FAILURE;
+  }
+
+  // Split input files
+  char *file1 = strtok(inputFiles, ",");
+  char *file2 = strtok(NULL, ",");
+  if (!file1 || !file2) {
+      fprintf(stderr, "Error: Invalid input file format\n");
+      return EXIT_FAILURE;
+  }
+
   int inputLength;
-  float *hostInput1;
-  float *hostInput2;
-  float *hostOutput;
+  float *hostInput1 = readCMD(file1, &inputLength);
+  float *hostInput2 = readCMD(file2, &inputLength);
+  float *hostOutput = (float *)malloc(inputLength * sizeof(float));
+  if (!hostOutput) {
+      fprintf(stderr, "Error: Could not allocate memory for output\n");
+      free(hostInput1);
+      free(hostInput2);
+      return EXIT_FAILURE;
+  }
+
+  // int inputLength;
+  // float *hostInput1;
+  // float *hostInput2;
+  // float *hostOutput;
   float *deviceInput1;
   float *deviceInput2;
   float *deviceOutput;
 
   //@@ Importing data and creating memory on host
-  hostInput1 = readBinaryFile("/pub/dpark15/ece408/UIUC_ECE408/lab1/data/0/input0.raw", &inputLength);
-  hostInput2 = readBinaryFile("/pub/dpark15/ece408/UIUC_ECE408/lab1/data/0/input0.raw", &inputLength);
-  hostOutput = (float *)malloc(inputLength * sizeof(float));
+  // hostInput1 = readCMD(file1, &inputLength);
+  // hostInput2 = readCMD(file2, &inputLength);
+  // hostOutput = (float *)malloc(inputLength * sizeof(float));
   
   int size = inputLength*sizeof(float);
 
@@ -88,12 +110,26 @@ int main(int argc, char **argv) {
 
   //@@ Copy the GPU memory back to the CPU here
   cudaMemcpy(hostOutput, deviceOutput, size, cudaMemcpyDeviceToHost);
-  saveArrayToFile("d_C.txt", h_B, nElem);
 
   //@@ Free the GPU memory here
   cudaFree(deviceInput1);
   cudaFree(deviceInput2);
   cudaFree(deviceOutput);
+
+  //@@ Save the output to the output file
+  FILE *output = fopen(outputFile, "wb");
+  if (!output) {
+      fprintf(stderr, "Error: Could not open output file %s\n", outputFile);
+      free(hostInput1);
+      free(hostInput2);
+      free(hostOutput);
+      return EXIT_FAILURE;
+  }
+
+  // Write the array length and data
+  fwrite(&inputLength, sizeof(int), 1, output);
+  fwrite(hostOutput, sizeof(float), inputLength, output);
+  fclose(output);
 
   free(hostInput1);
   free(hostInput2);
