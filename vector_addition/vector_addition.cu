@@ -154,6 +154,12 @@ int main(int argc, char **argv) {
   fwrite(hostOutput, sizeof(float), inputLength, output);
   fclose(output);
 
+  // Print the first few elements for debugging
+  printf("Data from %s:\n", outputFile);
+  for (int i = 0; i < (*inputLength < 5 ? *inputLength : 5); i++) { // Print up to 5 elements
+      printf("Element %d: %f\n", i, data[i]);
+  }
+
   free(hostInput1);
   free(hostInput2);
   free(hostOutput);
