@@ -181,6 +181,9 @@ int main(int argc, char **argv) {
         // Value is not a whole number, print as float with one decimal place
         fprintf(output, "%.1f", hostOutput[i]);
     }
+    if ( i+1 != inputLength ) {
+      fprintf(output, "\n");
+    }
   }
 
   fclose(output);
