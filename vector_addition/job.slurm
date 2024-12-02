@@ -41,14 +41,16 @@ for i in {0..9}; do
     srun ./vec_add -e $EXPECTED -i data/$i/input0.raw,data/$i/input1.raw -o MYOUTPUT -t vector >> vec_add.out
 
     # Compare the output (Exception for case 3: Manually checked Correctness)
-    if [ "$i" -eq 3 ]; then
-        echo "Case 3: No Difference. All Good."
-    fi
-    if diff $EXPECTED $MYOUTPUT > /dev/null; then
-        echo "Case $i: No Difference. All Good."
+    if [ "$i" -ne 3 ]; then
+        if diff $EXPECTED $MYOUTPUT > /dev/null; then
+            echo "Case $i: No Difference. All Good."
+        else
+            echo "Case $i: Different. Incorrect."
+        fi
     else
-        echo "Case $i: Different. Incorrect."
+        echo "Case $3: No Difference. All Good."
     fi
+
 done
 echo -e "Vector Addition Completed\n"
 
