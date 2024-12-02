@@ -174,7 +174,7 @@ int main(int argc, char **argv) {
 
   // Write each element of the output array on a new line
   for (int i = 0; i < inputLength; i++) {
-      fprintf(output, "%f\n", hostOutput[i]);
+    fprintf(output, "%.1f\n", hostOutput[i]); // Adjust precision here
   }
 
   fclose(output);
